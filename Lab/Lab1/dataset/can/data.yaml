@@ -1,0 +1,13 @@
+train: ../train/images
+val: ../valid/images
+test: ../test/images
+
+nc: 3
+names: ['can', 'glass', 'plastic']
+
+roboflow:
+  workspace: this
+  project: final-nm3iu
+  version: 10
+  license: Public Domain
+  url: https://universe.roboflow.com/this/final-nm3iu/dataset/10
