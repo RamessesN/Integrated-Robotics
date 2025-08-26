@@ -1,5 +1,5 @@
 from ultralytics import YOLO
-from config import DATA_YAML, MODEL_NAME, DEVICE
+from env_config import DATA_YAML, MODEL_NAME, DEVICE
 
 def train_model():
     print("Training model...")

@@ -1,6 +1,6 @@
 import cv2
 from ultralytics import YOLO
-from config import DATA_YAML, BEST_MODEL_PATH, DEVICE
+from env_config import DATA_YAML, BEST_MODEL_PATH, DEVICE
 
 def validate_model():
     print("Checking model Performance...")
