@@ -1,4 +1,4 @@
-train: ../train/images
+train: ../train_mouse/images
 val: ../valid/images
 test: ../test/images
 
