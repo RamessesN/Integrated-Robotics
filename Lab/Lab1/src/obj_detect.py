@@ -1,11 +1,11 @@
 import cv2
 from ultralytics import YOLO
-from env_config import DATA_YAML, BEST_MODEL_PATH, DEVICE
+from env_config import CAN_DATA_YAML, CAN_BEST_MODEL_PATH, DEVICE
 
 def validate_model():
     print("Checking model Performance...")
-    model = YOLO(BEST_MODEL_PATH)
-    metrics = model.val(data=DATA_YAML, device=DEVICE)
+    model = YOLO(CAN_BEST_MODEL_PATH)
+    metrics = model.val(data = CAN_DATA_YAML, device = DEVICE)
     print(f"Results: mAP50: {metrics.box.map50:.3f}, mAP50-95: {metrics.box.map:.3f}")
     return model
 
@@ -21,10 +21,10 @@ def detect_from_camera(model):
             print("Read frames failed")
             break
 
-        results = model.predict(frame, conf=0.25, device=DEVICE, verbose=False)
+        results = model.predict(frame, conf = 0.25, device = DEVICE, verbose = False)
         annotated_frame = results[0].plot()
 
-        cv2.imshow("Press `q` to quit", annotated_frame)
+        cv2.imshow("on Live", annotated_frame)
 
         if cv2.waitKey(1) & 0xFF == ord('q'):
             break
