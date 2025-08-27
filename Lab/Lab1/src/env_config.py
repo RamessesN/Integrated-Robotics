@@ -22,10 +22,10 @@ COMBINED_MODEL_NAME = "combined_detection_v1"
 # device configuration
 DEVICE = (
     "cuda" if torch.cuda.is_available() else
-    "mps" if torch.backends.mps.is_available() else
+    "mps" if torch.mps.is_available() else
+    "xps" if torch.xpu.is_available() else
     "cpu"
 )
-print(f"Using device: {DEVICE}")
 
 # result model (weight file)
 MOUSE_BEST_MODEL_PATH = os.path.join("weight", "mouse.pt") # mouse
