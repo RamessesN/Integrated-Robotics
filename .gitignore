@@ -208,3 +208,7 @@ __marimo__/
 
 # .DS_Store
 .DS_Store
+
+# idea
+/.idea/.gitignore
+/.idea/vcs.xml
