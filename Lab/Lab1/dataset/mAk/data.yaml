@@ -1,0 +1,13 @@
+# ~/combined/data.yaml
+
+train: ./train/images
+val: ./valid/images
+test: ./test/images
+
+# Category: 0-mouse 1-keyboard
+nc: 2
+names: ['mouse', 'keyboard']
+
+# description: combination dataset of `mouse`, `keyboard`
+# version: 1.0
+# date: 2025-08-31
