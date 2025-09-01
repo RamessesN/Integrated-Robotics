@@ -62,3 +62,13 @@ nms=True</code>     # avoid write NMS
 --saveEngine=combined_v1.engine \
 --fp16</code>       # [Optional] half-precision
 </pre>
+
+---
+
+### Video process on mac
+> **Command Line Operation**
+- Format conversion
+- - `ffmpeg -i input.mov output.mp4`
+- Compression
+- - 720p: `ffmpeg -i input.mp4 -vf "scale=-1:720" -c:v libx264 -crf 28 -preset fast -an output_720p.mp4`
+- - 480p: `ffmpeg -i input.mp4 -vf "scale=-1:480" -c:v libx264 -crf 28 -preset fast -an output_480p.mp4`
