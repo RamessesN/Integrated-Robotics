@@ -55,7 +55,7 @@ simplify=True \     # remove redundant operators
 dynamic=False \     # dynamic input size
 nms=True</code>     # avoid write NMS
 </pre>
-2. `onnx` -> `engine`
+2. `onnx` -> `engine` (It needs `cuda` device)
 <pre>
 <code>/usr/src/tensorrt/bin/trtexec \
 --onnx=xxx.onnx \
