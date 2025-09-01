@@ -41,7 +41,10 @@ def detect_from_video(model, video_path="./video/input_360p.mp4", output_path=".
             print("End of video or failed to read frame")
             break
 
-        results = model.predict(frame, conf=0.25, device=0, verbose=False)
+        results = model.predict(
+            frame, conf=0.25, device=0, verbose=False,
+            names={0: "mouse", 1: "keyboard", 2: "bottle"}
+        )
         annotated_frame = results[0].plot()
 
         current_time = cv2.getTickCount()
@@ -70,5 +73,5 @@ if __name__ == "__main__":
     detect_from_video(
         model,
         "./video/input_360p.mp4",
-        "./video/output_trt.mp4"
+        "./video/output_trt_V1.mp4"
     )
