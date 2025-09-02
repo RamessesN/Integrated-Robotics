@@ -2,6 +2,12 @@
 
 ---
 
+## YOLO Official Web
+
+See [Ultralytics YOLO Docs](https://docs.ultralytics.com)
+
+---
+
 ## YOLOv8 Training on Intel Arc GPU
 
 See [intel-extension-for-pytorch](https://github.com/intel/intel-extension-for-pytorch).

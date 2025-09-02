@@ -53,14 +53,14 @@ imgsz=640 \
 opset=12 \          # onnx operator set version
 simplify=True \     # remove redundant operators
 dynamic=False \     # dynamic input size
-nms=True</code>     # avoid write NMS
+nms=True            # avoid write NMS</code>     
 </pre>
 2. `onnx` -> `engine` (It needs `cuda` device)
 <pre>
 <code>/usr/src/tensorrt/bin/trtexec \
 --onnx=xxx.onnx \
 --saveEngine=combined_v1.engine \
---fp16</code>       # [Optional] half-precision
+--int8=true</code>  # 8-bit quantification
 </pre>
 
 ---
