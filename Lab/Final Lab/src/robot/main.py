@@ -1,7 +1,7 @@
 import threading, cv2
-import video_capture as vc
 
 from action_ctrl import *
+from object_follow import *
 from robomaster_ultra import robot
 
 window_name = "on Live"
@@ -16,10 +16,11 @@ def main():
     ep_sensor = ep_robot.sensor
     ep_chassis = ep_robot.chassis
 
-    ep_arm.recenter().wait_for_completed() # 初始化为居中
-    ep_gripper.open() # 初始化为闭合
+    ep_arm.move(x = 30, y = 150).wait_for_completed()
+    ep_arm.move(x = -5, y = -70).wait_for_completed()
+
+    ep_gripper.open() # 机械爪初始化：张开
     time.sleep(3)
-    ep_gripper.pause()
 
     vc.running = True
 
@@ -28,30 +29,37 @@ def main():
     )
     thread1.start()
 
-    thread2 = threading.Thread( # 机械臂控制在子线程2
-        target = arm_ctrl, args = (ep_arm,), daemon = True
+    thread2 = threading.Thread( # 底盘运动控制在子线程2
+        target = chassis_ctrl, args = (ep_chassis,), daemon = True
     )
     thread2.start()
 
-    thread3 = threading.Thread( # 机械爪控制在子线程3
-        target = gripper_ctrl, args = (ep_gripper,), daemon = True
+    thread3 = threading.Thread( # 机械臂控制在子线程3
+        target = arm_ctrl, args = (ep_arm,), daemon = True
     )
     thread3.start()
 
-    thread4 = threading.Thread( # 距离传感在子线程4
-        target = get_distance, args = (ep_sensor,), daemon = True
+    thread4 = threading.Thread( # 机械爪控制在子线程4
+        target = gripper_ctrl, args = (ep_gripper,), daemon = True
     )
     thread4.start()
 
+    thread5 = threading.Thread( # 距离传感在子线程5
+        target = get_distance, args = (ep_sensor,), daemon = True
+    )
+    thread5.start()
+
     cv2.namedWindow(window_name, cv2.WINDOW_AUTOSIZE)
 
-    window_central(1512, 982) # 画面居中
+    window_central(1920, 1080) # 画面居中
 
     while True:  # 视频流画面显示在主线程
         if vc.annotated_frame is not None:
            cv2.imshow(window_name, vc.annotated_frame)
 
         if cv2.waitKey(1) & 0xFF == ord('q'):
+            ep_gripper.open()
+            time.sleep(3)
             break
 
     vc.running = False

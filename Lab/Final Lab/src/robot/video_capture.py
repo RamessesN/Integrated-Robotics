@@ -4,10 +4,11 @@ from env_import import *
 from ultralytics import YOLO
 from robomaster_ultra import camera
 
+latest_frame = None
 annotated_frame = None
+target_x = None
 prev_time = 0
 running = True
-
 fps_list = []
 
 model = YOLO("../cv/mlmodel/pt/cola_v1.pt")
@@ -19,6 +20,18 @@ def yolo_predict(frame):
     annotated = results[0].plot()
 
     height, width = frame.shape[:2]
+    center_x = width // 2
+
+    target_x = None
+
+    if len(results[0].boxes) > 0:
+        box = results[0].boxes[0] # 取置信度最高的目标
+        x1, y1, x2, y2 = map(int, box.xyxy[0])
+        target_x = (x1 + x2) // 2
+
+    if target_x is not None:
+        cv2.circle(annotated, (target_x, height // 2), 5, (0, 255, 255), -1)
+        cv2.line(annotated, (center_x, 0), (center_x, height), (255, 255, 255), 1)
 
     current_time = cv2.getTickCount()
     fps = cv2.getTickFrequency() / (current_time - prev_time) if prev_time > 0 else 0
@@ -33,29 +46,28 @@ def yolo_predict(frame):
     if len(results) > 0 and  action_ctrl.latest_distance is not None:
         distance_text = f"{action_ctrl.latest_distance / 10:.2f} cm"
 
-    cv2.putText(
+    cv2.putText( # 打印分辨率
         annotated, f"RES: {width}x{height}", (10, 30), cv2.FONT_HERSHEY_SIMPLEX,
         1, (0, 0, 255), 2, lineType=cv2.LINE_AA
     )
-    cv2.putText(
+    cv2.putText( # 打印帧率
         annotated, f"FPS: {int(avg_fps)}", (10, 60), cv2.FONT_HERSHEY_SIMPLEX,
         1, (0, 255, 0), 2, lineType=cv2.LINE_AA
     )
-    cv2.putText(
+    cv2.putText( # 打印距离
         annotated, f"Distance: {distance_text}", (10, 90), cv2.FONT_HERSHEY_SIMPLEX,
         1, (255, 0, 0), 2, lineType=cv2.LINE_AA
     )
 
-    return annotated
-
+    return annotated, target_x
 
 def video_capture(ep_camera):
-    global latest_frame, annotated_frame, running
+    global latest_frame, annotated_frame, target_x, running
 
     ep_camera.start_video_stream(display = False, resolution = camera.STREAM_360P)
 
-    while True:
+    while running:
         img = ep_camera.read_cv2_image()
         if img is not None:
             latest_frame = img
-            annotated_frame = yolo_predict(img)
+            annotated_frame, target_x = yolo_predict(img)
