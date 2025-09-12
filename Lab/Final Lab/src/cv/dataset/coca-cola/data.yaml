@@ -3,12 +3,12 @@ val: ./valid/images
 test: ./test/images
 
 nc: 1
-names: ['coca-cola']
+names: ['Cola']
 
 roboflow:
   workspace: objdetect-tgixc
   author: RamessesN
-  project: coca-cola-drnt0-xy69j
-  version: 1
-  license: CC BY 4.0
-  url: https://universe.roboflow.com/objdetect-tgixc/coca-cola-drnt0-xy69j/dataset/1
+  project: cola-yibcm
+  version: 2
+  license: MIT
+  url: https://universe.roboflow.com/objdetect-tgixc/cola-yibcm/dataset/2
