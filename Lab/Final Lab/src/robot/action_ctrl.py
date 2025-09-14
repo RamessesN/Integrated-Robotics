@@ -26,13 +26,14 @@ def arm_ctrl(ep_arm):
     ep_arm.sub_position(freq = 20, callback = sub_data_handler_arm)
 
     previous_y = None
+    offset = 360 // 5 # 抓取位置修正
 
     while not gripper_closed_event.is_set():
         if not vc.running or vc.target_y is None:
             time.sleep(0.02)
             continue
 
-        error_y = vc.target_y
+        error_y = vc.target_y - offset # 上负下正
         y_move = pid_y(error_y)
         if abs(y_move) < 2: # 滤掉干扰
             y_move = 0

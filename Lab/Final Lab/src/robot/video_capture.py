@@ -17,7 +17,7 @@ model = YOLO("../cv/mlmodel/pt/cola_v2.pt")
 def yolo_predict(frame):
     global prev_time, target_x, target_y
 
-    results = model(frame, conf=0.25, device=cfg.DEVICE, verbose=False)
+    results = model(frame, conf = 0.25, device = cfg.DEVICE, verbose = False)
     annotated = results[0].plot()
 
     height, width = frame.shape[:2]
