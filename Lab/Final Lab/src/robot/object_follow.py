@@ -31,7 +31,7 @@ def pid_chassis(ep_chassis):
     current_distance = ac.latest_distance
     distance = current_distance if current_distance is not None else 8848
 
-    if distance <= 70:
+    if distance <= 65:
         chassis_stop(ep_chassis)
         return
 

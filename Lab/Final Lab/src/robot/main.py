@@ -1,5 +1,4 @@
 import threading, cv2
-
 from object_follow import *
 from robomaster_ultra import robot
 
@@ -15,10 +14,10 @@ def main():
     ep_sensor = ep_robot.sensor
     ep_chassis = ep_robot.chassis
 
-    ep_gripper.open() # 机械爪初始化：张开
+    ep_gripper.open() # 初始化机械爪状态 - 张开
     time.sleep(3)
 
-    ep_arm.recenter().wait_for_completed() # 机械臂初始化：回正
+    ep_arm.moveto(x = 180, y = 110).wait_for_completed() # 初始化机械臂状态 - (x: 180, y: 110)
 
     vc.running = True
 
