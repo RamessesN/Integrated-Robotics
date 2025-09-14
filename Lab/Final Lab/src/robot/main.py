@@ -18,6 +18,8 @@ def main():
     ep_gripper.open() # 机械爪初始化：张开
     time.sleep(3)
 
+    ep_arm.recenter().wait_for_completed() # 机械臂初始化：回正
+
     vc.running = True
 
     thread1 = threading.Thread( # 帧采集在子线程1
@@ -47,7 +49,7 @@ def main():
 
     cv2.namedWindow(window_name, cv2.WINDOW_AUTOSIZE)
 
-    window_central(1920, 1080) # 画面居中
+    window_central(1512, 982) # 画面居中
 
     while True:  # 视频流画面显示在主线程
         if vc.annotated_frame is not None:

@@ -3,7 +3,7 @@ import action_ctrl as ac
 import video_capture as vc
 from simple_pid import PID
 
-pid_x = PID(0.4, 0.01, 0.1, setpoint = 0)  # 居中
+pid_x = PID(0.3, 0, 0.03, setpoint = 0)  # 居中
 pid_x.output_limits = (-50, 50)
 
 pid_z = PID(0.5, 0.1, 0.05, setpoint = 13) # 靠近
@@ -31,7 +31,7 @@ def pid_chassis(ep_chassis):
     current_distance = ac.latest_distance
     distance = current_distance if current_distance is not None else 8848
 
-    if 10 < distance <= 55:
+    if distance <= 70:
         chassis_stop(ep_chassis)
         return
 
@@ -44,6 +44,7 @@ def pid_chassis(ep_chassis):
 
 def chassis_stop(ep_chassis):
     ep_chassis.drive_wheels(w1 = 0, w2 = 0, w3 = 0, w4 = 0)
+    time.sleep(0.02)
 
 def drive_chassis(ep_chassis, forward_speed, turn_speed):
     left_speed = forward_speed - turn_speed

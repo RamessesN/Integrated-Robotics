@@ -3,13 +3,12 @@ import video_capture as vc
 from collections import deque
 from simple_pid import PID
 
-pid_y = PID(0.2, 0.01, 0.05, setpoint = 180)
-pid_y.output_limits = (-25, 25)
+pid_y = PID(0.5, 0, 0.03, setpoint = 180)
+pid_y.output_limits = (-50, 50)
 
 gripper_closed = False
-lift_request = False
 latest_distance: float | None = None
-gripper_status: str | None = None    # opened-张开; closed-闭合; normal-中间
+gripper_status: str | None = None # opened-张开; closed-闭合; normal-中间
 
 pos_x, pos_y = 0, 0
 last_pos_x, last_pos_y = None, None
@@ -20,18 +19,17 @@ def arm_ctrl(ep_arm):
     Controls the robot arm
     :param ep_arm: the object of the robot arm
     """
-    global pos_y, last_pos_y, gripper_closed, lift_request
+    global pos_x, pos_y, last_pos_y, gripper_closed
 
-    ep_arm.sub_position(freq = 5, callback = sub_data_handler_arm)
+    ep_arm.sub_position(freq = 20, callback = sub_data_handler_arm)
 
     previous_y = None
     offset = 360 // 10
 
     while True:
-        if gripper_closed and lift_request:
-            print("WTF!!! LIFT REQUEST DETECTED")
-            ep_arm.move(y = 100).wait_for_completed()
-            lift_request = False
+        if gripper_closed:
+            # TODO: 实现机器人抓取目标后的系列动作
+
             continue
 
         if not vc.running or vc.target_y is None:
@@ -45,9 +43,10 @@ def arm_ctrl(ep_arm):
 
         if previous_y and abs(y_move - previous_y) <= 0.5:
                 time.sleep(0.02)
-                # continue
 
-        ep_arm.move(y = y_move).wait_for_completed()
+        x_move = max(200, pos_x) # 保证横向机械臂不会碰到前壳
+
+        ep_arm.move(x = x_move, y = y_move).wait_for_completed()
 
         previous_y = y_move
         last_pos_y = pos_y
@@ -66,14 +65,14 @@ def gripper_ctrl(ep_gripper):
     Controls the robot gripper
     :param ep_gripper: the object of the robot gripper
     """
-    global gripper_closed, lift_request
+    global gripper_closed
 
     ep_gripper.sub_status(freq = 5, callback = sub_data_handler_gripper)
     dist_queue = deque(maxlen = 15) # 连续帧记录
 
     while not gripper_closed:
         if latest_distance is not None:
-            in_grasp_range = 5 <= latest_distance <= 46
+            in_grasp_range = latest_distance <= 45
             dist_queue.append(in_grasp_range)
 
             if len(dist_queue) == 15 and all(dist_queue): # 连续15帧距离数据都小于阈值时触发
@@ -84,7 +83,6 @@ def gripper_ctrl(ep_gripper):
                     timeout += 1
                 if gripper_status == "closed":
                     gripper_closed = True
-                    lift_request = True
                 break
 
         time.sleep(0.05)
@@ -105,7 +103,7 @@ def get_distance(ep_sensor):
     Subscribe the distance information from the distance sensor
     :param ep_sensor: the object of the distance sensor
     """
-    ep_sensor.sub_distance(freq = 5, callback = sub_data_handler_distance)
+    ep_sensor.sub_distance(freq = 20, callback = sub_data_handler_distance)
     while True:
         time.sleep(0.1)
 
