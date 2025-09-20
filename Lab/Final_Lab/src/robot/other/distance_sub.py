@@ -1,8 +1,9 @@
-from Lab.Final_Lab.src.robot.env_import import *
+from collections import deque
+import threading
 
 latest_distance: float | None = None
 target_closed_event = threading.Event() # 判断是否靠近物体
-dist_queue = deque(maxlen=15)  # 连续帧记录
+dist_queue = deque(maxlen=15) # 连续帧记录
 
 def get_distance(ep_sensor):
     """

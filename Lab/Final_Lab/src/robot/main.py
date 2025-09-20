@@ -1,5 +1,14 @@
 from robomaster_ultra import robot
-from env_import import *
+import cv2, time, threading
+
+import movement.gripper_ctrl as gc
+import movement.chassis_ctrl as cc
+import vision.video_capture as vc
+import other.distance_sub as ds
+import movement.arm_ctrl as ac
+import workflow as wf
+
+robot_initialized_event = threading.Event() # 判断机器人是否初始化完毕
 
 window_name = "on Live"
 screen_width = 1512
@@ -20,10 +29,16 @@ def main():
     time.sleep(3)
     ep_arm.moveto(x = 180, y = 110).wait_for_completed()  # 初始化机械臂状态 - 实测(x: 180, y: 110)视野广
 
+    robot_initialized_event.set() # `机器人初始化完毕`事件设置
+
     vc.running = True
 
+    threading.Thread( # 工作流
+        target = wf.workflow, args = (ep_chassis, ep_gripper, ep_arm,), daemon = True
+    ).start()
+
     threading.Thread(  # 帧采集在子线程1
-        target = vc.video_capture, args = (ep_camera, ep_vision), daemon = True
+        target = vc.video_capture, args = (ep_camera, ep_vision,), daemon = True
     ).start()
 
     threading.Thread(  # 机械臂瞄准控制在子线程2
@@ -44,10 +59,6 @@ def main():
 
     threading.Thread( # 距离传感在子线程6
         target = ds.get_distance, args = (ep_sensor,), daemon = True
-    ).start()
-
-    threading.Thread( # 运行流程workflow在子线程7
-        target = wf.workflow, daemon = True
     ).start()
 
     cv2.namedWindow(window_name, cv2.WINDOW_AUTOSIZE)

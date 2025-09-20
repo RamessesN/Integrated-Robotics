@@ -1,4 +1,9 @@
-from Lab.Final_Lab.src.robot.env_import import *
+from simple_pid import PID
+import time, threading
+
+import Lab.Final_Lab.src.robot.vision.video_capture as vc
+import Lab.Final_Lab.src.robot.vision.marker_config as mc
+import Lab.Final_Lab.src.robot.other.distance_sub as ds
 
 pid_x = PID(0.3, 0, 0.03, setpoint = 0)  # (object) 居中
 pid_x.output_limits = (-50, 50)
@@ -13,18 +18,14 @@ object_closed_event = threading.Event() # 判断是否靠近物体
 marker_closed_event = threading.Event() # 判断是否靠近marker
 
 frame_width = 640
-current_target: str | None = None
 
-def chassis_ctrl(ep_chassis):
+def chassis_ctrl(ep_chassis, current_target: str | None = None):
     """
     Control the Chassis to approach the Target
     :param ep_chassis: the object of the robot chassis
+    :param current_target: target (object / marker)
     """
-    global current_target
-
     while vc.running:
-        current_target = "object" if not ac.arm_lifted_event.is_set() else "marker"
-
         target_valid = False
         if current_target == "object":
             target_valid = vc.target_x is not None and vc.target_y is not None
@@ -41,13 +42,13 @@ def chassis_ctrl(ep_chassis):
 
     chassis_stop(ep_chassis)
 
-def pid_chassis(ep_chassis, status):
+def pid_chassis(ep_chassis, target: str | None = None):
     """
     Chassis PID controller
     :param ep_chassis: the object of the robot chassis
-    :param status: target (object / marker)
+    :param target: target (object / marker)
     """
-    if status == "object":
+    if target == "object":
         error_x = vc.target_x - (frame_width // 2)
         current_distance = ds.latest_distance
         distance = current_distance if current_distance is not None else 8848
@@ -59,12 +60,13 @@ def pid_chassis(ep_chassis, status):
 
         if abs(error_x) < 40 and (10 < distance < 45):
             chassis_stop(ep_chassis)
+            object_closed_event.set() # `靠近object`事件设置
         else:
             turn_speed = pid_x(error_x)
             forward_speed = -pid_z(distance)
             drive_chassis(ep_chassis, forward_speed, turn_speed)
 
-    elif status == "marker":
+    elif target == "marker":
         target_marker = mc.get_specified_marker(mc.target_info)
 
         center_x, center_y = target_marker.center
@@ -79,6 +81,22 @@ def pid_chassis(ep_chassis, status):
             turn_speed = pid_x(error_x)
             forward_speed = max(-pid_z_area(marker_area), 0)
             drive_chassis(ep_chassis, forward_speed, turn_speed)
+
+def search_marker(ep_chassis, target: str | None = None):
+    """
+    Search the specified marker
+    :param ep_chassis: the object of the robot chassis
+    :param target: the target marker
+    :return: the specified marker
+    """
+    marker = None
+    while marker is None:
+        ep_chassis.drive_wheels(w1 = 30, w2 = -30, w3 = -30, w4 = 30)
+        marker = mc.get_specified_marker(target)
+        time.sleep(0.05)
+
+    chassis_stop(ep_chassis)
+    return marker
 
 def chassis_stop(ep_chassis):
     """

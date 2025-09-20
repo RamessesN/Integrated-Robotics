@@ -1,3 +1,5 @@
+import Lab.Final_Lab.src.robot.vision.video_capture as vc
+
 markers = []
 target_info: str | None = None
 
@@ -59,3 +61,15 @@ def get_specified_marker(target: str | None):
         if marker.info == target:
             return marker
     return None
+
+def object_under_marker(target: str | None):
+    """
+    Close to the Marker `3`
+    :return: whether the object is under the marker 3
+    """
+    marker = get_specified_marker(target)
+    if marker is None or (vc.target_x is None or vc.target_y is None):
+        return False
+    x1, y1 = marker.pt1
+    x2, y2 = marker.pt2
+    return (x1 - 20) <= vc.target_x <= (x2 + 20) and vc.target_y <= y1

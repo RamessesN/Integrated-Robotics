@@ -1,4 +1,4 @@
-from Lab.Final_Lab.src.robot.env_import import *
+import time, threading
 
 gripper_status: str | None = None # opened-张开; closed-闭合; normal-中间
 
@@ -15,7 +15,7 @@ def gripper_ctrl(ep_gripper, status):
 
     timeout = 0
 
-    if status == "closed":
+    if status == "close":
         ep_gripper.close()
         while gripper_status != "closed" and timeout < 20:
             time.sleep(0.1)
@@ -23,7 +23,7 @@ def gripper_ctrl(ep_gripper, status):
         if gripper_status == "closed":
             gripper_closed_event.set() # `抓住目标`事件设置
 
-    elif status == "opened":
+    elif status == "open":
         ep_gripper.open()
         while gripper_status != "opened" and timeout < 20:
             time.sleep(0.1)
