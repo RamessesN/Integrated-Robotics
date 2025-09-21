@@ -11,12 +11,13 @@ def gripper_ctrl(ep_gripper, status):
     :param ep_gripper: the object of the robot gripper
     :param status: closed / opened
     """
-    ep_gripper.sub_status(freq = 20, callback = sub_data_handler_gripper)
+    ep_gripper.sub_status(freq = 10, callback = sub_data_handler_gripper)
 
     timeout = 0
 
     if status == "close":
         ep_gripper.close()
+        time.sleep(3)
         while gripper_status != "closed" and timeout < 20:
             time.sleep(0.1)
             timeout += 1
@@ -25,6 +26,7 @@ def gripper_ctrl(ep_gripper, status):
 
     elif status == "open":
         ep_gripper.open()
+        time.sleep(3)
         while gripper_status != "opened" and timeout < 20:
             time.sleep(0.1)
             timeout += 1

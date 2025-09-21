@@ -68,8 +68,11 @@ def object_under_marker(target: str | None):
     :return: whether the object is under the marker 3
     """
     marker = get_specified_marker(target)
+
     if marker is None or (vc.target_x is None or vc.target_y is None):
         return False
-    x1, y1 = marker.pt1
-    x2, y2 = marker.pt2
-    return (x1 - 20) <= vc.target_x <= (x2 + 20) and vc.target_y <= y1
+
+    _, y1 = marker.pt1
+    _, y2 = marker.pt2
+
+    return vc.target_y >= y1

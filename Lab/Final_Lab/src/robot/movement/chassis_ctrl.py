@@ -1,9 +1,9 @@
-from simple_pid import PID
-import time, threading
-
 import Lab.Final_Lab.src.robot.vision.video_capture as vc
 import Lab.Final_Lab.src.robot.vision.marker_config as mc
 import Lab.Final_Lab.src.robot.other.distance_sub as ds
+
+from simple_pid import PID
+import time, threading
 
 pid_x = PID(0.3, 0, 0.03, setpoint = 0)  # (object) 居中
 pid_x.output_limits = (-50, 50)
@@ -14,7 +14,6 @@ pid_z.output_limits = (-40, 40)
 pid_z_area = PID(0.5, 0, 0, setpoint = 13) # (marker) 靠近
 pid_z_area.output_limits = (-40, 40)
 
-object_closed_event = threading.Event() # 判断是否靠近物体
 marker_closed_event = threading.Event() # 判断是否靠近marker
 
 frame_width = 640
@@ -25,11 +24,16 @@ def chassis_ctrl(ep_chassis, current_target: str | None = None):
     :param ep_chassis: the object of the robot chassis
     :param current_target: target (object / marker)
     """
-    while vc.running:
+    while True:
         target_valid = False
+
         if current_target == "object":
+            if ds.target_closed_event.is_set(): # 如果已经靠近了物体
+                break
             target_valid = vc.target_x is not None and vc.target_y is not None
         elif current_target == "marker":
+            if marker_closed_event.is_set(): # 如果已经靠近了marker
+                break
             target_marker = mc.get_specified_marker(mc.target_info)
             target_valid = target_marker is not None
 
@@ -55,12 +59,10 @@ def pid_chassis(ep_chassis, target: str | None = None):
 
         if distance <= 70:
             chassis_stop(ep_chassis)
-            object_closed_event.set() # `靠近object`事件设置
             return
 
         if abs(error_x) < 40 and (10 < distance < 45):
             chassis_stop(ep_chassis)
-            object_closed_event.set() # `靠近object`事件设置
         else:
             turn_speed = pid_x(error_x)
             forward_speed = -pid_z(distance)
@@ -89,14 +91,15 @@ def search_marker(ep_chassis, target: str | None = None):
     :param target: the target marker
     :return: the specified marker
     """
-    marker = None
-    while marker is None:
-        ep_chassis.drive_wheels(w1 = 30, w2 = -30, w3 = -30, w4 = 30)
-        marker = mc.get_specified_marker(target)
-        time.sleep(0.05)
+    marker = mc.get_specified_marker(target)
+    if marker:
+        chassis_stop(ep_chassis)
+        return True
 
+    ep_chassis.drive_wheels(w1 = 30, w2 = -30, w3 = -30, w4 = 30) # Rotate to search the target
+    time.sleep(1)
     chassis_stop(ep_chassis)
-    return marker
+    return False
 
 def chassis_stop(ep_chassis):
     """
