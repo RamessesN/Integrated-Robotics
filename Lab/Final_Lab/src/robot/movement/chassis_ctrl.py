@@ -89,16 +89,36 @@ def search_marker(ep_chassis, target: str | None = None):
     Search the specified marker
     :param ep_chassis: the object of the robot chassis
     :param target: the target marker
-    :return: the specified marker
+    :return: whether the specified marker is found
     """
-    marker = mc.get_specified_marker(target)
-    if marker:
-        chassis_stop(ep_chassis)
-        return True
+    rotate_speed = 30
+    rotated_angle = 0
+    counter = 0
 
-    ep_chassis.drive_wheels(w1 = 30, w2 = -30, w3 = -30, w4 = 30) # Rotate to search the target
-    time.sleep(1)
-    chassis_stop(ep_chassis)
+    while rotated_angle < 720:
+        marker = mc.get_specified_marker(target)
+        if marker:
+            counter += 1
+            center_x, _ = marker.center
+            if center_x < 150:
+                ep_chassis.drive_wheels(w1 = -10, w2 = 10, w3 = 10, w4 = -10)
+            elif center_x > 490:
+                ep_chassis.drive_wheels(w1 = 10, w2 = -10, w3 = -10, w4 = 10)
+            else:
+                ep_chassis.drive_wheels(w1 = 0, w2 = 0, w3 = 0, w4 = 0)
+        else:
+            counter = 0
+            ep_chassis.drive_wheels(w1 = rotate_speed, w2 = -rotate_speed, w3 = -rotate_speed, w4 = rotate_speed)
+
+        if counter >= 3:
+            ep_chassis.drive_wheels(w1 = 0, w2 = 0, w3 = 0, w4 = 0)
+            return True
+
+        time.sleep(0.05)
+        rotated_angle += rotate_speed * 0.05
+
+    ep_chassis.drive_wheels(w1 = 0, w2 = 0, w3 = 0, w4 = 0)
+
     return False
 
 def chassis_stop(ep_chassis):

@@ -29,9 +29,8 @@ def workflow(current_state, ep_chassis, ep_gripper, ep_arm):
         return states["Object_Searching"]
 
     elif current_state == states["Object_Approaching"]:
-        if ds.target_closed_event.is_set() and ac.arm_aimed_event.is_set():
+        if ds.target_closed_event.is_set():
             ds.target_closed_event.clear()
-            ac.arm_aimed_event.clear()
             ac.stop_aimed_event.set() # `停止机械臂对齐`事件设置
             return states["Object_Grabbing"]
         return states["Object_Approaching"]
@@ -79,26 +78,32 @@ def workflow(current_state, ep_chassis, ep_gripper, ep_arm):
 def action_ctrl(ep_chassis, ep_arm, ep_gripper):
     current_state = states["Object_Searching"]
 
+    approach_threads_started = False
+    marker_threads_started = False
+
     while vc.running and current_state != states["Task_Complete"]:
         if current_state == states["Object_Approaching"]:
-            ds.target_closed_event.clear()
-            ac.arm_aimed_event.clear()
-            ac.stop_aimed_event.clear()
+            if not approach_threads_started:
+                ds.target_closed_event.clear()
+                ac.stop_aimed_event.clear()
 
-            threading.Thread(
-                target = cc.chassis_ctrl, args = (ep_chassis, "object")
-            ).start()
-            threading.Thread(
-                target = ac.arm_ctrl, args = (ep_arm, "aim")
-            ).start()
+                threading.Thread(
+                    target = cc.chassis_ctrl, args = (ep_chassis, "object")
+                ).start()
+                threading.Thread(
+                    target = ac.arm_ctrl, args = (ep_arm, "aim")
+                ).start()
 
-            next_state = states["Object_Grabbing"]
+                approach_threads_started = True
+
+            next_state = workflow(current_state, ep_chassis, ep_gripper, ep_arm)
         elif current_state == states["Marker_Approaching"]:
-            cc.marker_closed_event.clear()
+            if not marker_threads_started:
+                cc.marker_closed_event.clear()
+                cc.chassis_ctrl(ep_chassis, "marker")
+                marker_threads_started = True
 
-            cc.chassis_ctrl(ep_chassis, "marker")
-
-            next_state = states["Object_Lowering"]
+            next_state = workflow(current_state, ep_chassis, ep_gripper, ep_arm)
         else:
             next_state = workflow(current_state, ep_chassis, ep_gripper, ep_arm)
 

@@ -6,7 +6,6 @@ import time, threading
 pid_y = PID(0.5, 0, 0.03, setpoint = 180)
 pid_y.output_limits = (-50, 50)
 
-arm_aimed_event = threading.Event()   # 判断机械臂是否对准物体
 arm_lifted_event = threading.Event()  # 判断是否抬起机械臂
 arm_lowered_event = threading.Event() # 判断机械臂是否放下
 
@@ -43,9 +42,6 @@ def arm_ctrl(ep_arm, status):
                 x_move = max(200, pos_x)  # 保证横向机械臂不会碰到前壳
                 ep_arm.move(x = x_move, y = y_move)
                 previous_y = y_move
-
-                if abs(error_y) < 3:
-                    arm_aimed_event.set()  # `瞄准目标`事件设置
 
             time.sleep(0.05)
 
