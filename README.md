@@ -11,7 +11,7 @@
 - Vulkan 1.3.204
 - Python 3.10.12
 - OpenCV 4.11.0 with CUDA: YES
-- PyTorch 2.8.0 (torchvision 0.23.0)
+- PyTorch 2.5.0 (torchvision 0.23.0)
 - TensorRT 10.3.0
 
 > Suggest to use `jtop` to check system config
@@ -22,15 +22,15 @@
 
 > Run `sudo apt-get update` `sudo apt-get upgrade` first
 
-<details open>
+<details>
 <summary> 1. Python </summary>
 
-- Use `miniconda` to manage `python` version. 
+- Use `miniconda` to manage python version. 
 - Run `conda create --name xxx python=3.10` to create virtual env
 
 </details>
 
-<details open>
+<details>
 <summary> 2. Ultralytics (YOLO) </summary>
 
 - Install ultralytics dependencies: `pip install ultralytics`
@@ -39,10 +39,10 @@
 
 </details>
 
-<details open>
+<details>
 <summary> 3. OpenCV </summary>
 
-- Install **nano / orin**: `sudo apt-get install nano` \
+- Install **nano / orin**: `sudo apt-get install nano`
     > Don't worry it's also compatible with `orin nx`
 - Install **dphys-swapfile**: `sudo apt-get install dphys-swapfile`
 - Enlarge the boundary of **CONF_MAXSWAP**: `sudo nano /sbin/dphys-swapfile`
@@ -54,6 +54,23 @@
 - Then check the installation of `opencv-cuda-version` is okay
 
     > Thanks to [Q-engineering](https://qengineering.eu/install-opencv-on-jetson-nano.html) I finally did it!
+
+</details>
+
+<details>
+<summary> 4. Pytorch </summary>
+
+- Uninstall **cpu-pytorch**: `sudo apt-get uninstall pytorch`  
+- Download **gpu-pytorch**: ...
+    > See Resources [Pytorch for Jetson](https://docs.nvidia.com/deeplearning/frameworks/install-pytorch-jetson-platform/index.html#overview)
+
+</details>
+
+<details>
+<summary> 5. TensorRT </summary>
+
+- Download **tensorrt**: ...
+    > See Resources [TensorRT for Jetson](https://docs.nvidia.com/deeplearning/tensorrt/latest/installing-tensorrt/installing.html)
 
 </details>
 
