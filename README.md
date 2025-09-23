@@ -61,16 +61,33 @@
 <summary> 4. Pytorch </summary>
 
 - Uninstall **cpu-pytorch**: `sudo apt-get uninstall pytorch`  
-- Download **gpu-pytorch**: ...
-    > See Resources [Pytorch for Jetson](https://docs.nvidia.com/deeplearning/frameworks/install-pytorch-jetson-platform/index.html#overview)
+- Install **gpu-pytorch** from a prebuild wheel:
+```
+pip install https://github.com/ultralytics/assets/releases/download/v0.0.0/torch-2.5.0a0+872d972e41.nv24.08-cp310-cp310-linux_aarch64.whl
+```
+> See Resources [Pytorch for Jetson](https://docs.nvidia.com/deeplearning/frameworks/install-pytorch-jetson-platform/index.html#overview)
 
 </details>
 
 <details>
 <summary> 5. TensorRT </summary>
 
-- Download **tensorrt**: ...
-    > See Resources [TensorRT for Jetson](https://docs.nvidia.com/deeplearning/tensorrt/latest/installing-tensorrt/installing.html)
+- Install **tensorrt** from a prebuild wheel:
+```
+pip install https://github.com/ultralytics/assets/releases/download/v0.0.0/torchvision-0.20.0a0+afc54f7-cp310-cp310-linux_aarch64.whl
+```
+> See Resources [TensorRT for Jetson](https://docs.nvidia.com/deeplearning/tensorrt/latest/installing-tensorrt/installing.html)
+
+</details>
+
+<details>
+<summary> 6. ONNX </summary>
+
+- The onnxruntime-gpu package hosted in PyPI does not have `aarch64` binaries for the Jetson. So we need to manually install this package.
+- Install `onnxruntime-gpu`: With Python3.10 on our `jetson orin nx`, here we install [onnxruntime-gpu 1.20.0](https://pypi.org/project/onnxruntime-gpu/) by:
+```
+pip install https://github.com/ultralytics/assets/releases/download/v0.0.0/onnxruntime_gpu-1.20.0-cp310-cp310-linux_aarch64.whl
+```
 
 </details>
 
