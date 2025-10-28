@@ -1,6 +1,6 @@
-import Lab.Final_Lab.src.robot.vision.video_capture as vc
-import Lab.Final_Lab.src.robot.vision.marker_config as mc
-import Lab.Final_Lab.src.robot.other.distance_sub as ds
+import Summer.Final_Lab.src.robot.vision.video_capture as vc
+import Summer.Final_Lab.src.robot.vision.marker_config as mc
+import Summer.Final_Lab.src.robot.other.distance_sub as ds
 
 from simple_pid import PID
 import time, threading

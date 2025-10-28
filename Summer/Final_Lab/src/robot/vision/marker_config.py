@@ -1,4 +1,4 @@
-import Lab.Final_Lab.src.robot.vision.video_capture as vc
+import Summer.Final_Lab.src.robot.vision.video_capture as vc
 
 markers = []
 target_info: str | None = None

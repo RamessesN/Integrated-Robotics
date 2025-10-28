@@ -1,9 +1,9 @@
-import Lab.Final_Lab.src.robot.movement.gripper_ctrl as gc
-import Lab.Final_Lab.src.robot.movement.chassis_ctrl as cc
-import Lab.Final_Lab.src.robot.vision.marker_config as mc
-import Lab.Final_Lab.src.robot.vision.video_capture as vc
-import Lab.Final_Lab.src.robot.other.distance_sub as ds
-import Lab.Final_Lab.src.robot.movement.arm_ctrl as ac
+import Summer.Final_Lab.src.robot.movement.gripper_ctrl as gc
+import Summer.Final_Lab.src.robot.movement.chassis_ctrl as cc
+import Summer.Final_Lab.src.robot.vision.marker_config as mc
+import Summer.Final_Lab.src.robot.vision.video_capture as vc
+import Summer.Final_Lab.src.robot.other.distance_sub as ds
+import Summer.Final_Lab.src.robot.movement.arm_ctrl as ac
 
 import time, threading
 

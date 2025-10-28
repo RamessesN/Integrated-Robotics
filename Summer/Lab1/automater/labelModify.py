@@ -1,6 +1,6 @@
 from pathlib import Path
 
-labels_dir = Path("/Users/stanley/Documents/COURSE/PROGRAMME/Python/Robotics-Integration-Group-13/Lab/Lab1/dataset/combined/test/images/untitled folder")
+labels_dir = Path("/Summer/Lab1/dataset/combined/test/images/untitled folder")
 
 file_count = 0
 line_count = 0

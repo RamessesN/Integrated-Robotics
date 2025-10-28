@@ -1,6 +1,6 @@
-from Lab.Final_Lab.src.cv import env_config as cfg
-import Lab.Final_Lab.src.robot.vision.marker_config as mc
-import Lab.Final_Lab.src.robot.other.distance_sub as ds
+from Summer.Final_Lab.src.cv import env_config as cfg
+import Summer.Final_Lab.src.robot.vision.marker_config as mc
+import Summer.Final_Lab.src.robot.other.distance_sub as ds
 
 from robomaster_ultra import camera
 from ultralytics import YOLO

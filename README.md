@@ -2,27 +2,27 @@
 
 ---
 
-## Our `jetson orin nx` system config
-- JetPack 6.2.1
-- Ubuntu 22.04 Jammy
-- CUDA 12.6.68
-- cuDNN 9.3.0.75
-- VPI 3.2.4
-- Vulkan 1.3.204
-- Python 3.10.12
-- OpenCV 4.11.0 with CUDA: YES
-- PyTorch 2.5.0 (torchvision 0.23.0)
-- TensorRT 10.3.0
+## Jetson Orin NX
+### 1. System Environment config
+| Environment | Version                    |
+|-------------|----------------------------|
+| JetPack     | 6.2.1                      |
+| Ubuntu      | 22.04 Jammy                |
+| CUDA        | 12.6.68                    |
+| cuDNN       | 9.3.0.75                   |
+| VPI         | 3.2.4                      |
+| Vulkan      | 1.3.204                    |
+| Python      | 3.10.12                    |
+| OpenCV      | 4.11.0 with CUDA: YES      |
+| PyTorch     | 2.5.0 (torchvision 0.23.0) |
+| TensorRT    | 10.3.0                     |
 
-> Suggest to use `jtop` to check system config
+> Suggestion: Use `jtop` to check the system config.
 
----
-
-## Jetson Orin NX Configuration
-
-> Run `sudo apt-get update` `sudo apt-get upgrade` first
-
+### 2. Compilation Environment config
+Before configuring the environement, run `sudo apt-get update` and `sudo apt-get upgrade` at first.
 <details>
+
 <summary> 1. Python </summary>
 
 - Use `miniconda` to manage python version. 
@@ -93,20 +93,7 @@ pip install https://github.com/ultralytics/assets/releases/download/v0.0.0/onnxr
 
 ---
 
-## YOLO Official Web
-
-See [Ultralytics YOLO Docs](https://docs.ultralytics.com)
-
----
-
-## Robomaster Support
-
-See [Robomaster SDK Ultra](https://github.com/RamessesN/Robomaster-SDK-Ultra) for `python-3.10` compatibility.
-
----
-
-## YOLOv8 Training on Intel Arc GPU
-
-See [intel-extension-for-pytorch](https://github.com/intel/intel-extension-for-pytorch).
-
-See [ultralytics issue #19821](https://github.com/ultralytics/ultralytics/issues/19821) for `Intel Arc` compatibility.
+## Reference
+[1] YOLO Official Web: [Ultralytics YOLO Docs](https://docs.ultralytics.com) \
+[2] Robomaster Support: [Robomaster SDK Ultra](https://github.com/RamessesN/Robomaster-SDK-Ultra) \
+[3] Training on Intel Arc GPU: [intel-extension-for-pytorch](https://github.com/intel/intel-extension-for-pytorch) & [ultralytics issue #19821](https://github.com/ultralytics/ultralytics/issues/19821)
