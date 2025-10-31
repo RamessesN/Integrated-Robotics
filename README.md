@@ -97,3 +97,7 @@ pip install https://github.com/ultralytics/assets/releases/download/v0.0.0/onnxr
 [1] YOLO Official Web: [Ultralytics YOLO Docs](https://docs.ultralytics.com) \
 [2] Robomaster Support: [Robomaster SDK Ultra](https://github.com/RamessesN/Robomaster-SDK-Ultra) \
 [3] Training on Intel Arc GPU: [intel-extension-for-pytorch](https://github.com/intel/intel-extension-for-pytorch) & [ultralytics issue #19821](https://github.com/ultralytics/ultralytics/issues/19821)
+
+---
+
+#### ⚠️ License: This project isn't open-source. See Details [LICENSE](LICENSE).

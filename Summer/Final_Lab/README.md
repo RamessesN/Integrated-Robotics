@@ -3,7 +3,7 @@
     <h2> Final Project </h2>
 </div>
 
-<img src="./doc/img/ouc.png" alt="ouc_alt" title="ouc_img">
+<img src="../../doc/img/ouc.png" alt="ouc_alt" title="ouc_img">
 
 <div align="center">
     <h3> Team ID: #13 </h3>
@@ -19,10 +19,8 @@
 ---
 
 ## I. Project Abstract
-This project is the final task of `Course @Robotics Integration Group Project` during the 2025 summer semester. 
+This project is the final task of Course **@Robotics Integration Group Project** during the 2025 summer semester. 
 We group achieves the goal of robot (robomaster) automatically detect, grab and place target (cola can).
-
-> P.S. See ...
 
 ---
 
@@ -163,8 +161,6 @@ and to realize the project structure that can easily modify the process.
 Therefore, we added some `time.sleep()` to increase the robustness of the robot in processing information, which causes robot to "look like" it has a high latency.
 - Even though `multi-thread` of python is constrained by `GIL` from `CPython`, it still rarely causes `High-Concurrency`.
 
-#### ⚠️ License: This project isn't open-source. See Details [LICENSE](./LICENSE.txt).
-
 ---
 
-<img src="./doc/img/ouc2.png" alt="ouc2_alt" title="ouc2_img">
+<img src="../../doc/img/ouc2.png" alt="ouc2_alt" title="ouc2_img">
