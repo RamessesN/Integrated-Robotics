@@ -1,0 +1,3 @@
+[submodule "src/Autumn/zyw_coursework"]
+	path = src/Autumn/zyw_coursework
+	url = https://github.com/RamessesN/Robotics_MIT
